@@ -74,6 +74,10 @@ def compare_uneq_len(a, b):
     n = len(a)
     m = len(b)
 
+    # check the args are the right way round
+    if m > n:
+        raise ValueError("string b is longer than string a")
+
     # slide b across a from left to right till from just overlapping till full overlap
     overlap = 0 # stores length of the overlap
     lconcat = "" # stores the curretn shortest common superstring
@@ -124,7 +128,7 @@ if __name__ == "__main__":
 
     a = "GCAGGT"
     b = "TTAGA"
-    scs = compare_uneq_len(a, b)
+    scs = compare_uneq_len(b, a)
     print("scs", scs)
 
 
