@@ -1,14 +1,13 @@
 """Shortest common superstring"""
 
+import argparse
 import math
 import random
 import string
 import time
-import logging
+import itertools
 
 from strcmp.strcmp import compare_eq_len, compare_uneq_len
-
-# import pdb
 
 random.seed(1234) # fixed random seed to make the results reproducible
 
@@ -40,40 +39,33 @@ def get_sequence_fragments(string, m, l):
     return frags, frag_idxs
 
 # # find the shortest common supersequence from the fragments, this is the shortest sequence which has all the sequences as subsequences
-# def assemble_sequence_greedy(frags):
-#     """
-#     Naive algorithm for finding the shortest common superstring from a list of fragments. The algorithm
-#     compares pairs of strings, updating the result of each comparison with the string containing both strings with the 
-#     longest overlap. The result from each pairwise comparison this is then compared to the next fragment in the
-#     list. This process is repeated m times (m is the number of fragments), starting with the ith frag in the list
-#     each time. The shorted of the m resulting strings is the results. This algorithn does not compare every possible
-#     permutation of strings.
-#         input:
-#             frags: a list of equal length string fragments
-#         output:
-#             shortest: The shortest common superstring produced by the algorithm
-#             shortest_len: The length of the returned string
-#             total_time: The time taken in seconds to run the function
-#     """
-#     start_time = time.time()
-#     num_frags = len(frags)
-#     m = len(frags[0])
-#     shorts = []
-#     for i in range(num_frags):
-#         a = f[i] # current fragment
-#         rest = [x for idx, x in enumerate(f) if idx != i] # all other fragments
-#         for b in rest:
-#             # first just compare one fragment to all the others
-#             if len(a) > len(b): # compare strings then update a with longest overlap
-#                 a = compare_uneq_len(a, b)
-#             else:
-#                 a = compare_eq_len(a, b)
-#         shorts.append(a)
-#     shortest = sorted(shorts, key=lambda x:len(x))[0]
-#     shortest_len = len(shortest)
-#     total_time = time.time() - start_time
-#     return shortest, shortest_len, total_time
-
+def assemble_sequence_greedy(frags):
+    """
+    Naive greedy algorithm for finding the shortest common superstring from a list of fragments of strings.
+    The algorithm compares pairs of strings, updating the result of each comparison with the string 
+    containing both strings with the longest overlap. The result from each pairwise comparison 
+    is then compared to the next fragment in the list. This process is repeated perm(m) times 
+    (m is the number of fragments) for each possible ordering of the string fragments.
+    The shortest of the resulting strings is the results. Which should hopefully be 
+    an accurate reproduction of the original string.
+        input:
+            frags: a list of equal length string fragments of a source string
+        output:
+            shortest_common_superstring: Reproduced string
+            total_time: The time taken in seconds to run the function
+    """
+    start_time = time.time()
+    scs_list = []
+    num_frags = len(frags) # assuming all fragments are equal length
+    # get all permutations of
+    for perm in itertools.permutations(frags):
+        a = perm[0]
+        for b in perm[1:]:
+            a = scs_of_pair(a, b) # return the shortest common superstring of a and b
+        scs_list.append(a)
+    shortest_common_superstring = sorted(scs_list, key=lambda x:len(x))[0]
+    total_time = time.time() - start_time
+    return shortest_common_superstring, total_time
 
 def lander_waterman_metric(n, l, m, t):
     """
@@ -92,13 +84,21 @@ def lander_waterman_metric(n, l, m, t):
 
 if __name__ == '__main__':
         
-    # logging.basicConfig(level=logging.INFO)
-    # # logger = logging.getLogger(__name__)
+    parser = argparse.ArgumentParser()
 
-    n = 10 # length of the random sequence seq
-    fragm = 6 
-    fragl = 5 
-    s = generate_random_string(10)
-    f, ids = get_sequence_fragments(s, fragm, fragl) # works fine
+    parser.add_argument("--n", type=int, help="length of random string", default=20)
+    parser.add_argument("--m", type=int, help="number of string fragments", default=20)
+    parser.add_argument("--l", type=int, help="lenth of string fragments", default=6)
+    
+    args = parser.parse_args()
 
+    s = generate_random_string(args.n)
+
+    f, ids = get_sequence_fragments(s, args.m, args.l) # works fine
+    scs, tt = assemble_sequence_greedy(f)
+
+    print("{} - original string".format(s))
+    print("{} - reconstructed string".format(scs))
+    print("{} - time taken".format(tt))
+    print("{} - expected gaps".format(lander_waterman_metric(args.n, args.l, args.m, 1)))
 
