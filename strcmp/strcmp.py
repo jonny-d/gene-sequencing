@@ -1,4 +1,4 @@
-"""Functions for comparing pairs of strings"""
+"""Functions for finding shortest common superstring of  pairs of strings"""
 
 def compare_eq_len(a, b):
     """
@@ -23,11 +23,13 @@ def compare_eq_len(a, b):
         endb = m
         if a[starta:enda] == b[startb:endb]:
             # if an overlap is found, check if it is larger than the previously detected one
-            print("overlap found")
+            # print("overlap found")
             if len(a[starta:enda]) > overlap: 
                 overlap = len(a[starta:enda]) 
                 lconcat = b + a[enda:] # this is the current shortest common superstring
-        print(starta, enda, startb, endb, a[starta:enda], b[startb:endb])
+        # print(starta, enda, startb, endb, a[starta:enda], b[startb:endb])
+
+    # print("-")
 
     # slide b across a so that b starts from one element past a after full overlap
     rconcat = ""
@@ -38,10 +40,10 @@ def compare_eq_len(a, b):
         endb = m - (j+1)
         if a[starta:enda] == b[startb:endb]:
             if len(a[starta:enda]) > overlap: # if there is a bigger overlap then save it 
-                print("overlap found")
+                # print("overlap found")
                 overlap = len(a[starta:enda]) 
                 rconcat = a + b[endb:]
-        print(starta, enda, startb, endb, a[starta:enda], b[startb:endb])
+        # print(starta, enda, startb, endb, a[starta:enda], b[startb:endb])
 
     # after checking for overlaps there may be 1 or no shortest common
     # superstrings stored in both lconcat and rconcat. Choose the shortest one if it exists
@@ -60,12 +62,12 @@ def compare_eq_len(a, b):
         superstring = rconcat
     return superstring
 
-def compare_uneq_len(a, b):
+def scs_of_pair(a, b):
     """
     Find the shortest common superstring from two unequal length strings. If there
     is no overlap then return the concatenation a + b. 
     input:
-        a: String
+        a: String, must be longer than b
         b: String
     ouptut:
         superstring: String which is the shortest common superstring of a and b
@@ -87,13 +89,13 @@ def compare_uneq_len(a, b):
         startb = (m - (j+1)) if (j+1) < m else 0  
         endb = m 
         if a[starta:enda] == b[startb:endb]:
-            print("overlap found")
+            # print("overlap found")
             if len(a[starta:enda]) > overlap: # if there is a bigger overlap then save it 
                 overlap = len(a[starta:enda]) 
                 lconcat = b + a[enda:]
-        print(starta, enda, startb, endb, a[starta:enda], b[startb:endb])
+        # print(starta, enda, startb, endb, a[starta:enda], b[startb:endb])
 
-    print("-")
+    # print("-")
     rconcat = ""
     for j in range(m - 1):
         starta = (n - m) + (j + 1) 
@@ -101,11 +103,11 @@ def compare_uneq_len(a, b):
         startb = 0 
         endb = m - (j+1) 
         if a[starta:enda] == b[startb:endb]:
-            print("overlap found")
+            # print("overlap found")
             if len(a[starta:enda]) > overlap: # if there is a bigger overlap then save it 
                 overlap = len(a[starta:enda]) 
                 rconcat = a + b[endb:]
-        print(starta, enda, startb, endb, a[starta:enda], b[startb:endb])
+        # print(starta, enda, startb, endb, a[starta:enda], b[startb:endb])
 
     # after checking for overlaps there may be 1 or no shortest common
     # superstrings stored in both lconcat and rconcat. Choose the shortest one if it exists

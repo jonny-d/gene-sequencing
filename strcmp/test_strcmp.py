@@ -3,7 +3,7 @@
 import unittest
 import random
 
-from strcmp import compare_eq_len, compare_uneq_len
+from strcmp import compare_eq_len, scs_of_pair
 
 random.seed(1234)
 
@@ -36,35 +36,35 @@ class StrcmpTest(unittest.TestCase):
         scs = compare_eq_len(a, b)
         self.assertEqual(scs, "AAABBB", "Shortest common superstring is not the expected value")
 
-    def test_compare_uneq_len(self):
+    def test_scs_of_pair(self):
         # should also work with equal length strings
         # test when a and b are equal
         a = self.test_frags[0]
         b = self.test_frags[0]
-        scs = compare_uneq_len(a, b)
+        scs = scs_of_pair(a, b)
         self.assertEqual(a, scs, "Shortest common superstring of identical strings should be that string")
         
         # test an expected overlap
         a = self.test_frags[0]
         b = self.test_frags[2]
-        scs = compare_uneq_len(a, b)
+        scs = scs_of_pair(a, b)
         self.assertEqual(scs, "GCAGGTT", "Shortest common superstring is not the expected value")
 
         # test no overlap
         a = "AAA"
         b = "BBB"
-        scs = compare_uneq_len(a, b)
+        scs = scs_of_pair(a, b)
         self.assertEqual(scs, "AAABBB", "Shortest common superstring is not the expected value")
 
         # check unequal length strings with overlap
         a = "GCAGGTT"
         b = "TTAGA"
-        scs = compare_uneq_len(a, b)
+        scs = scs_of_pair(a, b)
         self.assertEqual(scs, "GCAGGTTAGA", "Shortest common superstring is not the expected value")
 
         # check unequal length strings no overlap
         a = "AAAA"
         b = "BBB"
-        scs = compare_uneq_len(a, b)
+        scs = scs_of_pair(a, b)
         self.assertEqual(scs, "AAAABBB", "Shortest common superstring is not the expected value")
 
