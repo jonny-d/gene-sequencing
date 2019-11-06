@@ -56,8 +56,15 @@ class StrcmpTest(unittest.TestCase):
         scs = compare_uneq_len(a, b)
         self.assertEqual(scs, "AAABBB", "Shortest common superstring is not the expected value")
 
-        # check unequal length strings
+        # check unequal length strings with overlap
         a = "GCAGGTT"
         b = "TTAGA"
         scs = compare_uneq_len(a, b)
         self.assertEqual(scs, "GCAGGTTAGA", "Shortest common superstring is not the expected value")
+
+        # check unequal length strings no overlap
+        a = "AAAA"
+        b = "BBB"
+        scs = compare_uneq_len(a, b)
+        self.assertEqual(scs, "AAAABBB", "Shortest common superstring is not the expected value")
+
