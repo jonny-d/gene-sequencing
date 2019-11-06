@@ -7,7 +7,7 @@ from q3 import generate_random_string, get_sequence_fragments
 
 random.seed(1234)
 
-class Q3test(unittest.TestCase):
+class Q3Test(unittest.TestCase):
     def setUp(self):
         self.test_string = 'GCAGGTTAGA'
         self.test_frags = ['GCAGG', 'GCAGG', 'AGGTT', 'TTAGA', 'GTTAG', 'GGTTA']
